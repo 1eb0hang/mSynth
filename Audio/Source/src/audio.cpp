@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include "corecrt_math_defines.h"
+#include <xiosbase>
+
+const int sampleRate = 44100;
+const int bitDepth = 16;
+
+
+
+void WriteToFile(std::ofstream& file, int value, int size)
+{
+	file.write((const char*)(&value), size);
+}
+
+int main()
+{
+	int duration = 2;
+	std::ofstream audioFile;
+
+	audioFile.open("waveform.wav", std::ios::binary);
+
+	//Header Chunk
+	audioFile << "RIFF";
+	audioFile << "----";
+	audioFile << "WAVE";
+
+	//Format Chunk
+	audioFile << "fmt ";
+	WriteToFile(audioFile, 16, 4);
+	WriteToFile(audioFile, 1, 2);  // compression code;
+	WriteToFile(audioFile, 1, 2); //Number of channels
+	WriteToFile(audioFile, sampleRate, 4); //Sample rate
+	WriteToFile(audioFile, (sampleRate * bitDepth / 8), 4); // Byte rate
+	WriteToFile(audioFile, 2, 2); //Block Align
+	WriteToFile(audioFile, bitDepth, 2); //bitDepth
+
+	//Data Chunk
+	audioFile << "data";
+	audioFile << "----";
+
+	int preAudioPos = audioFile.tellp();
+
+	SineOcillator sineOsc(440,0.5);
+
+	auto maxAmp = pow(2, bitDepth - 1) - 1;
+
+	for (int i = 0; i < sampleRate * duration; i++)
+	{
+		float sample = sineOsc.Process();
+		int intSample = (int)(sample * maxAmp);
+		WriteToFile(audioFile, intSample, 2);
+	}
+
+	int postAudiopos = audioFile.tellp();
+
+	audioFile.seekp(preAudioPos - 4);
+	WriteToFile(audioFile, postAudiopos - preAudioPos, 4);
+
+	audioFile.seekp(4, std::ios::beg);
+	WriteToFile(audioFile, postAudiopos - 8, 4);
+
+	audioFile.close();
+
+	std::cin.get();
+	return 0;
+}

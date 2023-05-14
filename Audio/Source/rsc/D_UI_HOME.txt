@@ -1,0 +1,20 @@
+START(app:{ size(500x500) color(0x343434)})
+
+SCREEN START
+screen: {no(1) pos(10x10) size(480x150) color(0x8f8f8f)}
+SCREEN END
+
+SCROLLBARS START
+Handle:{no(5) pos(82.67x[173.457, 231.461, 289.466, 347.47, 405.475]) size(30x30) stroke(1.047) color(0x1b1b1b, 0x8f8f8f)}
+
+Bar:{no(5) pos(scrollHandles::pos) size(399.09x10) color(0x8f8f8f)}
+
+text:{no(5) pos([13.414, 12.676,  48.542, 43.189, 12.676]x[183.089, 240.936, 299.948, 357.539, 415.456]) size([67.664, 68.402, 32.573, 37.889, 68.402]x11) font{size(13.4997921) face("sans-serif")} value(["Amplitude", "Frequency", "Time", "Phase", "Frequency"]) color(0xd2d2d2)}}
+SCROLLBARS END
+
+BUTTON START
+button:{no(3) pos([10.906, 174.239, 337.572]x450.906) size(515.521x38.187) color(0x8f8f8f)}
+
+text:{no(3) pos([61.407 ,224.579, 401.355]x463.457) size([50.1519, 50.842, 23.954]x[12.735, 10.052, 10.026]) font{size(13.4997921) face("sans-serif")} value(["Options", "Preview", "Exit"]) color(0x0c0c0c)}}
+BUTTON END
+END(app)
